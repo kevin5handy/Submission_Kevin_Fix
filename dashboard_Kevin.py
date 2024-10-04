@@ -104,10 +104,10 @@ with column3:
     Count = hdf2['cnt'][hour]
     st.metric('Average total user in hour that you choose:', value=Count)
 
-fig,ax = plt.subplots(nrows=1, ncols=1,figsize=(24,12))
-sns.barplot(data=hdf2, x="hr", y="cnt", color = "black")
-ax.set_title("Casual Weather", loc="center")
-ax.set_ylabel("count mean")
-ax.set_xlabel("hour")
+fig,ax = plt.subplots(nrows=1, ncols=1,figsize=(24,20))
+sns.barplot(data=hdf2, x="hr", y="cnt")
+ax.set_title("Casual Weather", loc="center", 25)
+ax.set_ylabel("count mean", size=20)
+ax.set_xlabel("hour", size=20)
 ax.tick_params(axis='x', labelsize=20)
 st.pyplot(fig)
