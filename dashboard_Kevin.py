@@ -12,46 +12,34 @@ df1['dteday'] = pd.to_datetime(df1['dteday'])
 df2 = pd.read_csv('hour.csv')
 df2['dteday'] = pd.to_datetime(df2['dteday'])
 
-datemin = df1['dteday'].min()
-datemax = df1['dteday'].max()
 with st.sidebar:
     st.header('Kevin\'s dashboard')
     st.image('IMG_5170.JPG')
 
-    date_1, date_n = st.date_input(
-        label = 'Date range:',
-        min_value = datemin,
-        max_value = datemax,
-        value = [datemin,datemax]
-    )
-
     hour = st.selectbox(label = 'Select Hour', options=(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23))
 
-main_df1 = df1[(df1['dteday'] >= str(date_1))&(df1['dteday'] <= str(date_n))]
 
-daily_main_df1 = main_df1.resample(rule='D', on='dteday').agg({
-    "cnt" : "sum"
+mdf1 = df1.resample(rule='M', on='dteday').agg({
+    "cnt": "sum"
 })
-daily_main_df1 = daily_main_df1.reset_index()
-daily_main_df1.rename(columns={
-    'cnt' : 'count'
+
+mdf1.index = mdf1.index.strftime('%Y-%m')
+mdf1 = mdf1.reset_index()
+mdf1.rename(columns={
+    "dteday": "month",
+    "cnt": "cnt_monthly"
 }, inplace=True)
 
-st.subheader('Ranged-Daily Bike Sharing')
-
-column1, column2 = st.columns(2)
-with column1:
-    Count = daily_main_df1['count'].sum()
-    st.metric('Order Count:', value=Count)
+st.subheader('Monthly Bike Sharing')
     
 #
 fig,ax = plt.subplots(figsize=(24,12))
 ax.plot(
-    daily_main_df1['dteday'],
-    daily_main_df1['count'],
+    mdf1['month'],
+    mdf1['cnt_monthly'],
     marker = 'o',
     linewidth = 2,
-    color = "#90CAF9"
+    color = "red"
 )
 ax.tick_params(axis='y', labelsize=20)
 ax.tick_params(axis='x', labelsize=20)
